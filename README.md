@@ -5,17 +5,12 @@
 Turn AMiner's academic data capabilities into ready-to-use query and analysis Skills.
 This repository currently provides four skill flavors:
 
-- `aminer-academic-search`: full version with 27 APIs and 6 analysis workflows
-- `aminer-free-academic`: free-first version focused on discovery, lightweight screening, normalization, and upgrade qualification
-- `aminer-daily-paper`: personalized paper recommendation based on topics, scholar profiles, or author information
-- `aminer-deep-search`: LLM-controlled ReAct loop for deep survey-style paper collection and citation snowballing
-
-## What These Skills Do in One Line
-
-- `aminer-academic-search`: academic retrieval plus deeper analysis workflows
-- `aminer-free-academic`: free-tier paper / scholar / org / venue / patent discovery and triage
-- `aminer-daily-paper`: personalized paper recommendation via AMiner rec5 API (Markdown in `reply_text`)
-- `aminer-deep-search`: collect hundreds of candidate survey references with AMiner search and reference expansion
+| Skill | Best for | Cost |
+|---|---|---|
+| `aminer-academic-search` | Full academic retrieval & analysis (27 APIs, 5 workflows) | Paid APIs |
+| `aminer-free-academic` | Discovery, lightweight screening, normalization, upgrade qualification | Free APIs only |
+| `aminer-daily-paper` | Personalized paper recommendation by topics / scholar / user ID | rec5 API |
+| `aminer-deep-search` | Multi-round survey bibliography collection with citation snowballing | Search APIs + your LLM |
 
 ## What Problems It Solves
 
@@ -36,19 +31,21 @@ This repository currently provides four skill flavors:
 Generate a Token in the AMiner Console:  
 https://open.aminer.cn/open/board?tab=control
 
+```bash
+export AMINER_API_KEY="<YOUR_TOKEN>"
+```
+
 ### 2) Pick a Call Style
 
 Use direct `curl` calls by default. A Python client is optional, not required.
 
 Recommended common headers:
 
-- `Authorization: ${AMINER_API_KEY}`
+- `Authorization: $AMINER_API_KEY`
 - `X-Platform: openclaw`
 - `Content-Type: application/json;charset=utf-8` for POST requests
 
-```bash
-export AMINER_API_KEY="<YOUR_TOKEN>"
-```
+> Note: use double quotes around `"$AMINER_API_KEY"` in shell commands so the variable expands; single quotes pass the literal text.
 
 For `aminer-deep-search`, also configure the OpenClaw LLM settings before running:
 
@@ -64,14 +61,14 @@ Do not hard-code provider-specific LLM tokens, base URLs, or model names in the 
 # Paper search
 curl -X GET \
   'https://datacenter.aminer.cn/gateway/open_platform/api/paper/search?page=1&size=5&title=BERT' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -H 'X-Platform: openclaw'
 
 # Scholar search
 curl -X POST \
   'https://datacenter.aminer.cn/gateway/open_platform/api/person/search' \
   -H 'Content-Type: application/json;charset=utf-8' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -H 'X-Platform: openclaw' \
   -d '{"name":"Andrew Ng","size":5}'
 
@@ -79,7 +76,7 @@ curl -X POST \
 curl -X POST \
   'https://datacenter.aminer.cn/gateway/open_platform/api/paper/qa/search' \
   -H 'Content-Type: application/json;charset=utf-8' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -H 'X-Platform: openclaw' \
   -d '{"use_topic":false,"query":"latest advances in transformer architecture","size":10}'
 
@@ -87,7 +84,7 @@ curl -X POST \
 curl -X POST \
   'https://datacenter.aminer.cn/gateway/open_platform/api/v3/paper/rec5' \
   -H 'Content-Type: application/json;charset=utf-8' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -d '{"topics":["multimodal agents","tool-use"],"size":5}'
 ```
 
@@ -102,18 +99,20 @@ curl -X POST \
 
 ## Directory Structure
 
-- `skills/aminer-academic-search/SKILL.md`: Full capability description, workflow design, and call constraints
-- `skills/aminer-free-academic/SKILL.md`: Free-tier skill for discovery and triage
-- `skills/aminer-free-academic/skill_zh.md`: Chinese version of the free-tier skill
-- `skills/aminer-free-academic/references/api-catalog.md`: Free-tier API parameter and field reference
-- `skills/aminer-daily-paper/SKILL.md`: Personalized paper recommendation skill definition and API spec
-- `skills/aminer-daily-paper/scripts/handle_trigger.py`: Recommendation skill entrypoint
-- `skills/aminer-deep-search/SKILL.md`: Deep survey collection skill definition and ReAct workflow constraints
-- `skills/aminer-deep-search/commands/aminer-deep-search.md`: Slash command wrapper for deep paper collection
+- `.claude-plugin/marketplace.json`: plugin marketplace manifest for the four skills
+- `skills/aminer-academic-search/SKILL.md`: full capability description, 5 analysis workflows, and call constraints
+- `skills/aminer-academic-search/scripts/aminer_client.py`: optional Python client
+- `skills/aminer-academic-search/references/api-catalog.md`: quick reference for all 27 API parameters and paths
+- `skills/aminer-academic-search/evals/evals.json`: evaluation cases and test samples
+- `skills/aminer-free-academic/SKILL.md`: free-tier skill for discovery and triage
+- `skills/aminer-free-academic/references/api-catalog.md`: free-tier API parameter and field reference
+- `skills/aminer-free-academic/evals/evals.json`: free-tier evaluation cases
+- `skills/aminer-daily-paper/SKILL.md`: personalized paper recommendation skill definition and API spec
+- `skills/aminer-daily-paper/README.md`: recommendation skill usage guide
+- `skills/aminer-daily-paper/scripts/handle_trigger.py`: recommendation skill entrypoint
+- `skills/aminer-deep-search/SKILL.md`: deep survey collection skill definition and ReAct workflow constraints
+- `skills/aminer-deep-search/commands/aminer-deep-search.md`: slash command wrapper for deep paper collection
 - `skills/aminer-deep-search/react_agent.py`: LLM-controlled AMiner search/reference collection loop
-- `skills/aminer-academic-search/scripts/aminer_client.py`: Optional Python client
-- `skills/aminer-academic-search/references/api-catalog.md`: Quick reference for all 27 API parameters and paths
-- `skills/aminer-academic-search/evals/evals.json`: Evaluation cases and test samples
 
 ## Notes
 
@@ -124,7 +123,8 @@ curl -X POST \
 ## References
 
 - AMiner Open Platform Documentation: https://open.aminer.cn/open/docs
-- Skill Detailed Documentation: `skills/aminer-academic-search/SKILL.md`
+- Full Skill Documentation: `skills/aminer-academic-search/SKILL.md`
 - Free Skill Documentation: `skills/aminer-free-academic/SKILL.md`
 - Recommendation Skill Documentation: `skills/aminer-daily-paper/SKILL.md`
 - Deep Search Skill Documentation: `skills/aminer-deep-search/SKILL.md`
+- 中文文档：[README.zh.md](README.zh.md)
