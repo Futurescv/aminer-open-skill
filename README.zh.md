@@ -5,17 +5,12 @@
 把 AMiner 的学术数据能力，变成"开箱即用"的查询与分析 Skill。
 仓库目前提供四类 Skill：
 
-- `aminer-academic-search`：全量版，覆盖 27 个接口和 6 个分析工作流
-- `aminer-free-academic`：免费版，专注免费接口、轻量初筛、实体标准化和升级前判断
-- `aminer-daily-paper`：推荐版，根据研究主题、学者画像或作者信息进行个性化论文推荐
-- `aminer-deep-search`：深度收集版，用 LLM 控制 ReAct 循环做综述文献收集和引用雪球扩展
-
-## 一句话了解这些 Skill
-
-- `aminer-academic-search`：适合做学术信息检索、深度分析和组合工作流
-- `aminer-free-academic`：适合做免费优先的论文/学者/机构/期刊/专利发现与初筛
-- `aminer-daily-paper`：适合做个性化论文推荐，通过 `reply_text` 返回 Markdown
-- `aminer-deep-search`：适合为综述写作收集数百篇候选论文，并做关键词扩展与引用扩展
+| Skill | 适用场景 | 成本 |
+|---|---|---|
+| `aminer-academic-search` | 全量学术检索与分析（27 个接口、5 个工作流） | 计费接口 |
+| `aminer-free-academic` | 发现、轻量初筛、实体标准化、升级前判断 | 仅免费接口 |
+| `aminer-daily-paper` | 按主题 / 学者 / 用户 ID 的个性化论文推荐 | rec5 接口 |
+| `aminer-deep-search` | 多轮综述文献收集与引用雪球扩展 | 检索接口 + 自备 LLM |
 
 ## 能解决哪些问题
 
@@ -36,19 +31,21 @@
 在 AMiner 控制台生成 Token：  
 https://open.aminer.cn/open/board?tab=control
 
+```bash
+export AMINER_API_KEY="<YOUR_TOKEN>"
+```
+
 ### 2) 准备调用方式
 
 默认直接使用 `curl` 即可，不要求 Python 客户端。
 
 推荐统一请求头：
 
-- `Authorization: ${AMINER_API_KEY}`
+- `Authorization: $AMINER_API_KEY`
 - `X-Platform: openclaw`
 - `Content-Type: application/json;charset=utf-8`（POST 接口）
 
-```bash
-export AMINER_API_KEY="<YOUR_TOKEN>"
-```
+> 注意：shell 命令里 `"$AMINER_API_KEY"` 要用双引号才会展开变量；单引号会把字面文本原样发出去。
 
 如果使用 `aminer-deep-search`，还需要在运行前配置 OpenClaw LLM：
 
@@ -64,14 +61,14 @@ export AMINER_API_KEY="<YOUR_TOKEN>"
 # 论文搜索
 curl -X GET \
   'https://datacenter.aminer.cn/gateway/open_platform/api/paper/search?page=1&size=5&title=BERT' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -H 'X-Platform: openclaw'
 
 # 学者搜索
 curl -X POST \
   'https://datacenter.aminer.cn/gateway/open_platform/api/person/search' \
   -H 'Content-Type: application/json;charset=utf-8' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -H 'X-Platform: openclaw' \
   -d '{"name":"Andrew Ng","size":5}'
 
@@ -79,7 +76,7 @@ curl -X POST \
 curl -X POST \
   'https://datacenter.aminer.cn/gateway/open_platform/api/paper/qa/search' \
   -H 'Content-Type: application/json;charset=utf-8' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -H 'X-Platform: openclaw' \
   -d '{"use_topic":false,"query":"transformer 架构最新进展","size":10}'
 
@@ -87,7 +84,7 @@ curl -X POST \
 curl -X POST \
   'https://datacenter.aminer.cn/gateway/open_platform/api/v3/paper/rec5' \
   -H 'Content-Type: application/json;charset=utf-8' \
-  -H 'Authorization: ${AMINER_API_KEY}' \
+  -H "Authorization: $AMINER_API_KEY" \
   -d '{"topics":["多模态智能体","tool-use"],"size":5}'
 ```
 
@@ -102,18 +99,20 @@ curl -X POST \
 
 ## 目录说明
 
-- `skills/aminer-academic-search/SKILL.md`：完整能力说明、工作流设计、调用约束
-- `skills/aminer-free-academic/skill_zh.md`：免费接口版中文 Skill
-- `skills/aminer-free-academic/SKILL.md`：免费接口版英文 Skill
+- `.claude-plugin/marketplace.json`：四个 skill 的插件市场清单
+- `skills/aminer-academic-search/SKILL.md`：完整能力说明、5 个分析工作流、调用约束
+- `skills/aminer-academic-search/scripts/aminer_client.py`：可选 Python 客户端
+- `skills/aminer-academic-search/references/api-catalog.md`：27 个 API 参数与路径速查
+- `skills/aminer-academic-search/evals/evals.json`：评测用例与测试样例
+- `skills/aminer-free-academic/SKILL.md`：免费接口版 Skill（英文）
 - `skills/aminer-free-academic/references/api-catalog.md`：免费接口参数与返回字段速查
+- `skills/aminer-free-academic/evals/evals.json`：免费版评测用例
 - `skills/aminer-daily-paper/SKILL.md`：个性化论文推荐 Skill 定义与 API 规格
+- `skills/aminer-daily-paper/README.md`：推荐 Skill 使用指南
 - `skills/aminer-daily-paper/scripts/handle_trigger.py`：推荐 Skill 入口脚本
 - `skills/aminer-deep-search/SKILL.md`：深度综述文献收集 Skill 定义与 ReAct 工作流约束
 - `skills/aminer-deep-search/commands/aminer-deep-search.md`：深度文献收集 slash command
 - `skills/aminer-deep-search/react_agent.py`：由 LLM 控制的 AMiner 搜索/引用扩展收集循环
-- `skills/aminer-academic-search/scripts/aminer_client.py`：可选 Python 客户端
-- `skills/aminer-academic-search/references/api-catalog.md`：27 个 API 参数与路径速查
-- `skills/aminer-academic-search/evals/evals.json`：评测用例与测试样例
 
 ## 注意事项
 
@@ -124,7 +123,8 @@ curl -X POST \
 ## 参考资料
 
 - AMiner 开放平台文档：https://open.aminer.cn/open/docs
-- Skill 详细文档：`skills/aminer-academic-search/SKILL.md`
-- 免费 Skill 文档：`skills/aminer-free-academic/skill_zh.md`
+- 全量 Skill 文档：`skills/aminer-academic-search/SKILL.md`
+- 免费 Skill 文档：`skills/aminer-free-academic/SKILL.md`
 - 推荐 Skill 文档：`skills/aminer-daily-paper/SKILL.md`
 - 深度收集 Skill 文档：`skills/aminer-deep-search/SKILL.md`
+- English docs: [README.md](README.md)
