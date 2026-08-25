@@ -12,7 +12,7 @@
 | `aminer-daily-paper` | 按主题 / 学者 / 用户 ID 的个性化论文推荐 | rec5 接口 |
 | `aminer-deep-search` | 多轮综述文献收集与引用雪球扩展 | 检索接口 + 自备 LLM |
 
-## 能解决哪些问题
+### 能解决哪些问题
 
 - 查某位学者：简介、研究方向、论文、专利、项目
 - 查某篇/某类论文：详情、引用关系、关键词扩展
@@ -24,7 +24,7 @@
 - 获取个性化论文推荐：按研究主题、学者姓名或 AMiner 用户 ID 推荐相关论文
 - 构建综述参考文献集合：多轮关键词搜索、种子论文扩展、引用雪球扩展和去重收集
 
-## 3 分钟上手
+### 3 分钟上手
 
 ### 1) 准备 Token（必需）
 
@@ -88,7 +88,7 @@ curl -X POST \
   -d '{"topics":["多模态智能体","tool-use"],"size":5}'
 ```
 
-## 常见使用方式
+### 常见使用方式
 
 - **按任务走工作流**：适合"给我完整结果"的需求（如 scholar_profile、paper_deep_dive）
 - **按接口精细调用**：适合"只调一个 API"的需求（`--action raw` + `--api` + `--params`）
@@ -97,7 +97,7 @@ curl -X POST \
 - **个性化论文推荐**：用 `aminer-daily-paper` 按研究主题、学者姓名或 AMiner 用户 ID 获取论文推荐
 - **深度综述收集**：用 `aminer-deep-search` 或 `/aminer-deep-search` 做多轮大规模候选文献收集
 
-## 目录说明
+### 目录说明
 
 - `.claude-plugin/marketplace.json`：四个 skill 的插件市场清单
 - `skills/aminer-academic-search/SKILL.md`：完整能力说明、5 个分析工作流、调用约束
@@ -114,13 +114,13 @@ curl -X POST \
 - `skills/aminer-deep-search/commands/aminer-deep-search.md`：深度文献收集 slash command
 - `skills/aminer-deep-search/react_agent.py`：由 LLM 控制的 AMiner 搜索/引用扩展收集循环
 
-## 注意事项
+### 注意事项
 
 - 没有 Token 时不要继续调用 API
 - 客户端已内置超时重试与部分降级策略，能提升请求稳定性
 - 部分 API 为计费接口，建议先确认场景再放大调用规模
 
-## 参考资料
+### 参考资料
 
 - AMiner 开放平台文档：https://open.aminer.cn/open/docs
 - 全量 Skill 文档：`skills/aminer-academic-search/SKILL.md`
