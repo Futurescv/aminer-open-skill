@@ -12,7 +12,7 @@ This repository currently provides four skill flavors:
 | `aminer-daily-paper` | Personalized paper recommendation by topics / scholar / user ID | rec5 API |
 | `aminer-deep-search` | Multi-round survey bibliography collection with citation snowballing | Search APIs + your LLM |
 
-## What Problems It Solves
+### What Problems It Solves
 
 - Look up a scholar: bio, research interests, papers, patents, projects
 - Look up a paper or papers: details, citation relationships, keyword expansion
@@ -24,7 +24,7 @@ This repository currently provides four skill flavors:
 - Get personalized paper recommendations: by research topics, scholar name, or AMiner user ID
 - Build large survey bibliographies with multi-round keyword expansion and citation snowballing
 
-## Get Started in 3 Minutes
+### Get Started in 3 Minutes
 
 ### 1) Prepare a Token (Required)
 
@@ -88,7 +88,7 @@ curl -X POST \
   -d '{"topics":["multimodal agents","tool-use"],"size":5}'
 ```
 
-## Common Usage Patterns
+### Common Usage Patterns
 
 - **Task-based workflow**: suitable for "give me complete results" needs (e.g., scholar_profile, paper_deep_dive)
 - **Fine-grained API calls**: suitable for "call just one API" needs (`--action raw` + `--api` + `--params`)
@@ -97,7 +97,7 @@ curl -X POST \
 - **Personalized recommendation**: use `aminer-daily-paper` to get paper recommendations by topics, scholar name, or AMiner user ID
 - **Deep survey collection**: use `aminer-deep-search` or `/aminer-deep-search` for multi-round collection toward a large bibliography
 
-## Directory Structure
+### Directory Structure
 
 - `.claude-plugin/marketplace.json`: plugin marketplace manifest for the four skills
 - `skills/aminer-academic-search/SKILL.md`: full capability description, 5 analysis workflows, and call constraints
@@ -114,13 +114,13 @@ curl -X POST \
 - `skills/aminer-deep-search/commands/aminer-deep-search.md`: slash command wrapper for deep paper collection
 - `skills/aminer-deep-search/react_agent.py`: LLM-controlled AMiner search/reference collection loop
 
-## Notes
+### Notes
 
 - Do not continue calling APIs without a Token
 - The client has built-in timeout retry and partial fallback strategies to improve request stability
 - Some APIs are billed; confirm the scenario before scaling up calls
 
-## References
+### References
 
 - AMiner Open Platform Documentation: https://open.aminer.cn/open/docs
 - Full Skill Documentation: `skills/aminer-academic-search/SKILL.md`
